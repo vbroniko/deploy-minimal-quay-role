@@ -1,0 +1,18 @@
+---
+# tasks file for deploy-minimal-quay
+
+- include_tasks: prerequisites.yml
+  tags:
+    - prerequisites
+
+- include_tasks: create_database.yml
+  tags:
+    - create_database
+
+- include_tasks: create_redis.yml
+  tags:
+    - create_redis
+
+- include_tasks: create_quay.yml
+  tags:
+    - create_quay

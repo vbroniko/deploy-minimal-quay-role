@@ -1,0 +1,22 @@
+- name: Test upgrade role
+  hosts: localhost 
+  vars:
+    #QUAY VARIABLES
+    deploy_minimal_quay_gui_http_port: 8080
+    deploy_minimal_quay_gui_https_port: 8443
+    #REDIS VARIABLES
+    deploy_minimal_quay_redis_password: strongpassword
+    #POSTGRESQL VARIABLES
+    deploy_minimal_quay_psql_user: quayuser
+    deploy_minimal_quay_psql_password: quaypass
+    deploy_minimal_quay_psql_database: quay
+    deploy_minimal_quay_psql_admin_password: adminpass
+    deploy_minimal_quay_reg_fqdn: quay-server.example.com
+    #GENERAL VARIABLES
+    deploy_minimal_quay_install_dir: "/opt/quay"
+    deploy_minimal_quay_registry_username: ""
+    deploy_minimal_quay_registry_password: "" 
+  tasks: 
+    - name: Test role 
+      include_role: 
+        name: deploy-minimal-quay

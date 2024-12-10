@@ -1,0 +1,58 @@
+- name: Install podman and container-tools
+  ansible.builtin.package:
+    name:
+      - podman
+      - container-tools
+      - firewalld
+    state: present
+
+- name: Ensure firewalld service is started
+  ansible.builtin.systemd_service:
+    name: firewalld
+    state: started
+
+- name: Login into registry.redhat.io
+  containers.podman.podman_login:
+    username: "{{ deploy_minimal_quay_registry_username }}" 
+    password: "{{ deploy_minimal_quay_registry_password }}"
+    registry: "registry.redhat.io"
+
+- name: Allow firewalld on port 443
+  ansible.posix.firewalld:
+    port: "443/tcp"
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: Allow firewalld on port 5432
+  ansible.posix.firewalld:
+    port: "5432/tcp"
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: Allow firewalld on port 5443
+  ansible.posix.firewalld:
+    port: "5443/tcp"
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: Allow firewalld on port 6379
+  ansible.posix.firewalld:
+    port: "6379/tcp"
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: add an entry for quay-server.example.com in /etc/hosts
+  ansible.builtin.lineinfile:
+    path: "/etc/hosts"
+    line: "{{ ansible_default_ipv4.address }} {{ deploy_minimal_quay_reg_fqdn }}"
+
+
+
+  
+  
+  
+  

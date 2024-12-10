@@ -1,0 +1,8 @@
+- name: Launching the Redis container
+  containers.podman.podman_container:
+    name: redis
+    ports:
+      - "6379:6379"
+    env:
+      REDIS_PASSWORD: "{{ deploy_minimal_quay_redis_password }}"
+    image: "registry.redhat.io/rhel8/redis-6:1-110"

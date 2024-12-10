@@ -1,0 +1,38 @@
+- name: Create the Quay config directory
+  ansible.builtin.file:
+    path: "{{ deploy_minimal_quay_install_dir }}/config"
+    state: directory
+
+- name: Create the Quay configuration file
+  ansible.builtin.file:
+    path: "{{ deploy_minimal_quay_install_dir }}/config"
+    state: directory
+  
+- name: Create the Quay configuration file from template
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/config.yml.j2"
+    dest: "{{ deploy_minimal_quay_install_dir }}/config/config.yaml"
+
+- name: Create the Quay storage directory
+  ansible.builtin.file:
+    path: "{{ deploy_minimal_quay_install_dir }}/storage"
+    state: directory
+
+- name: Set Quay ACLs on {{ deploy_minimal_quay_install_dir }}/storage
+  ansible.posix.acl:
+    path: "{{ deploy_minimal_quay_install_dir }}/storage"
+    entity: "1001"
+    etype: user
+    permissions: wx
+    state: present
+
+- name: Launching the Quay container
+  containers.podman.podman_container:
+    name: quay
+    ports:
+      - "{{ deploy_minimal_quay_gui_http_port }}:8080"
+      - "{{ deploy_minimal_quay_gui_https_port }}:8443"
+    image: "registry.redhat.io/quay/quay-rhel8:v3.13.1" 
+    volumes: 
+      - "{{ deploy_minimal_quay_install_dir }}/config:/quay-registry/conf/stack:Z"
+      - "{{ deploy_minimal_quay_install_dir }}/storage:/datastorage:Z"

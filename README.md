@@ -1,1 +1,0 @@
-# deploy-minimal-quay-role
