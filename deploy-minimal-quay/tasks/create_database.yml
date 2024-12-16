@@ -32,5 +32,9 @@
 - name: Ensure the pg_trgm module is installed in PostgresQL
   containers.podman.podman_container_exec:
     name: postgresql-quay
-    command: echo "CREATE EXTENSION IF NOT EXISTS pg_trgm" | psql -d "{{ deploy_minimal_quay_psql_database  }}" -U "{{ deploy_minimal_quay_psql_user }}"
+    argv:
+      - /bin/bash
+      - -c
+      - echo "CREATE EXTENSION IF NOT EXISTS pg_trgm" | psql -d "{{ deploy_minimal_quay_psql_database  }}" -U "{{ deploy_minimal_quay_psql_user }}"
+
 
